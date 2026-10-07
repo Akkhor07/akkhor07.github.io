@@ -8,19 +8,30 @@ Double-click `index.html` to open it in your browser.
 
 ## Adding videos
 
-Upload each video to YouTube (Unlisted is fine), then open `js/main.js` and paste its ID
-at the top of the file:
+Each video can come from **YouTube** or **Mux**. Open `js/main.js` and fill in the list at the top:
 
 ```js
-const SHOWREEL_ID = "dQw4w9WgXcQ";   // from youtube.com/watch?v=dQw4w9WgXcQ
+const SHOWREEL = { youtube: "", mux: "PLAYBACK_ID" };
 
 const VIDEOS = [
-  { id: "abc123XYZ", type: "Explainer", title: "Explainer video" },
-  ...
+  { category: "long",  title: "Explainer video", youtube: "dQw4w9WgXcQ", mux: "" },
+  { category: "short", title: "Travel reel",     youtube: "", mux: "PLAYBACK_ID" },
+  { category: "ai",    title: "AI-generated ad", youtube: "", mux: "PLAYBACK_ID", vertical: true },
 ];
 ```
 
-Cards with an empty `id` show as "Coming soon".
+- **YouTube ID:** the part after `v=` in the video link. Unlisted videos work.
+- **Mux playback ID:** Mux dashboard → your video → "Playback ID". Its playback policy must be **public**.
+- **category:** `long` (Long form, 16:9), `short` (Short reels, 9:16) or `ai` (AI-assisted, 16:9;
+  add `vertical: true` for a 9:16 one).
+
+Videos with neither ID show as "Coming soon".
+
+If a YouTube video shows "This video is unavailable" on the site, YouTube is blocking it from playing
+on other websites. Check YouTube Studio → the video → Details → Show more → **Allow embedding**, and
+look for a music copyright claim. Until it's fixed, add `openOnYouTube: true` and the card opens the
+video on YouTube instead. The Mux player only downloads when someone presses play,
+so it doesn't slow down the page.
 
 ## Adding designs
 

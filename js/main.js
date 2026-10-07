@@ -1,21 +1,45 @@
 /* ==========================================================
    EDIT HERE — your videos
-   Upload to YouTube (Unlisted is fine) and paste the video ID:
-   https://www.youtube.com/watch?v=dQw4w9WgXcQ  →  id: "dQw4w9WgXcQ"
+   Each video can come from YouTube OR Mux — fill in one of them.
+
+   YouTube:  https://www.youtube.com/watch?v=dQw4w9WgXcQ  →  youtube: "dQw4w9WgXcQ"
+             (Unlisted videos work fine)
+   Mux:      Mux dashboard → your video → copy the "Playback ID"  →  mux: "abc123..."
+             (Set the playback policy to "public")
+
+   category: "long"  = Long form    (16:9 card)
+             "short" = Short reels  (9:16 vertical card)
+             "ai"    = AI-assisted  (16:9 card — add vertical: true for a 9:16 one)
+
+   Videos with no youtube or mux ID show as "Coming soon".
+   If YouTube won't play a video on other sites (embedding off, or a music
+   copyright claim), add openOnYouTube: true — the card then opens it on YouTube.
    ========================================================== */
 
-// Your showreel. Leave "" until it's ready.
-const SHOWREEL_ID = "";
+// Your showreel. Fill in one of the two when it's ready.
+const SHOWREEL = { youtube: "", mux: "" };
 
-// Your best edits. Cards with id: "" show as "Coming soon".
 const VIDEOS = [
-  { id: "", type: "Explainer", title: "Explainer video" },
-  { id: "", type: "Ad", title: "Ad for a US client" },
-  { id: "", type: "Event film", title: "TEDxRUET 2025" },
-  { id: "", type: "Travel", title: "Travel film" },
+  // Long form
+  { category: "long", title: "Spirit Guide — channel intro", youtube: "jg009Hiwgzw", mux: "" },
+  // YouTube blocks this one from playing on other sites — see README. Opens on YouTube for now.
+  { category: "long", title: "Bandarban tour", youtube: "IQhB25PRd34", mux: "", openOnYouTube: true },
+  { category: "long", title: "Promo for a digital coin", youtube: "Ps25Bw65mVQ", mux: "" },
+
+  // Short reels
+  { category: "short", title: "The ~100K-view Reel", youtube: "", mux: "" },
+  { category: "short", title: "Travel reel", youtube: "", mux: "" },
+  { category: "short", title: "Ad for a US client", youtube: "", mux: "" },
+  { category: "short", title: "Event highlight", youtube: "", mux: "" },
+
+  // AI-assisted
+  { category: "ai", title: "What If — intro video", youtube: "ea_uhSXMBXs", mux: "" },
+  { category: "ai", title: "Spirit Guide — channel intro", youtube: "jg009Hiwgzw", mux: "" },
 ];
 
 /* ========================================================== */
+
+const MUX_PLAYER_SRC = "https://cdn.jsdelivr.net/npm/@mux/mux-player@3.13.4";
 
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -39,54 +63,129 @@ function setMenu(open) {
 navToggle.addEventListener("click", () => setMenu(!navLinks.classList.contains("is-open")));
 navLinks.querySelectorAll("a").forEach(a => a.addEventListener("click", () => setMenu(false)));
 
-/* ---------- YouTube embeds ---------- */
+/* ---------- Video players (YouTube or Mux) ---------- */
 function youtubeEmbed(id) {
   const iframe = document.createElement("iframe");
   iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
   iframe.title = "YouTube video";
   iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
   iframe.allowFullscreen = true;
+  // YouTube rejects embeds that don't say which site they're on (error 153).
+  iframe.referrerPolicy = "strict-origin-when-cross-origin";
   return iframe;
+}
+
+// The Mux player script is ~1MB, so it only loads the first time someone presses play.
+let muxPlayerLoading = null;
+function loadMuxPlayer() {
+  if (!muxPlayerLoading) {
+    muxPlayerLoading = new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = MUX_PLAYER_SRC;
+      script.onload = resolve;
+      script.onerror = () => { muxPlayerLoading = null; reject(); };
+      document.head.appendChild(script);
+    });
+  }
+  return muxPlayerLoading;
+}
+
+function muxEmbed(playbackId, title) {
+  const player = document.createElement("mux-player");
+  player.setAttribute("playback-id", playbackId);
+  player.setAttribute("stream-type", "on-demand");
+  player.setAttribute("accent-color", "#e62b1e");
+  player.setAttribute("metadata-video-title", title);
+  player.setAttribute("autoplay", "");
+  return player;
+}
+
+function videoThumb(v) {
+  if (v.mux) return `https://image.mux.com/${v.mux}/thumbnail.webp?width=960&time=2`;
+  if (v.youtube) return `https://i.ytimg.com/vi/${v.youtube}/hqdefault.jpg`;
+  return "";
+}
+
+// Replaces `container`'s contents with a playing video.
+async function playVideo(container, v) {
+  container.innerHTML = "";
+  if (v.mux) {
+    container.classList.add("is-loading");
+    try {
+      await loadMuxPlayer();
+      container.appendChild(muxEmbed(v.mux, v.title));
+    } catch {
+      container.innerHTML = `<p class="video-error">Couldn't load the video. Please refresh and try again.</p>`;
+    }
+    container.classList.remove("is-loading");
+  } else {
+    container.appendChild(youtubeEmbed(v.youtube));
+  }
 }
 
 /* Showreel */
 const showreelFrame = document.getElementById("showreel-frame");
 const showreelPlay = document.getElementById("showreelPlay");
-if (SHOWREEL_ID) {
+if (SHOWREEL.youtube || SHOWREEL.mux) {
   document.getElementById("showreelStatus").textContent = "· watch now";
-  showreelPlay.addEventListener("click", () => {
-    showreelFrame.querySelector(".showreel__poster").remove();
-    showreelFrame.appendChild(youtubeEmbed(SHOWREEL_ID));
-  });
+  showreelPlay.addEventListener("click", () => playVideo(showreelFrame, { ...SHOWREEL, title: "Showreel" }));
 } else {
   showreelPlay.disabled = true;
   showreelPlay.setAttribute("aria-label", "Showreel coming soon");
 }
 
 /* Video grid */
+const CATEGORY_LABELS = { long: "Long form", short: "Short reel", ai: "AI-assisted" };
 const videoGrid = document.getElementById("videoGrid");
+
 VIDEOS.forEach(v => {
+  const hasVideo = Boolean(v.youtube || v.mux);
+  const vertical = v.category === "short" || v.vertical;
   const card = document.createElement("div");
-  card.className = "video-card reveal" + (v.id ? "" : " video-card--soon");
+  card.className = "video-card reveal"
+    + (vertical ? " video-card--vertical" : "")
+    + (hasVideo ? "" : " video-card--soon");
+  card.dataset.vcat = v.category;
+
   const meta = `
     <div class="video-card__meta">
-      <p class="video-card__type">${v.type}</p>
+      <p class="video-card__type">${CATEGORY_LABELS[v.category] || ""}</p>
       <h3 class="video-card__title">${v.title}</h3>
     </div>`;
-  if (v.id) {
+
+  if (hasVideo) {
     card.innerHTML = `
-      <img class="video-card__thumb" src="https://i.ytimg.com/vi/${v.id}/hqdefault.jpg" alt="" loading="lazy">
+      <img class="video-card__thumb" src="${videoThumb(v)}" alt="" loading="lazy">
       ${meta}
-      <button class="video-card__btn" aria-label="Play ${v.title}"><i class="fa-solid fa-play"></i></button>`;
-    card.querySelector("button").addEventListener("click", () => {
-      card.innerHTML = "";
-      card.appendChild(youtubeEmbed(v.id));
-    });
+      ${v.openOnYouTube
+        ? `<a class="video-card__btn" href="https://www.youtube.com/watch?v=${v.youtube}" target="_blank" rel="noopener" aria-label="Watch ${v.title} on YouTube"><i class="fa-brands fa-youtube"></i></a>`
+        : `<button class="video-card__btn" aria-label="Play ${v.title}"><i class="fa-solid fa-play"></i></button>`}`;
+    if (!v.openOnYouTube) card.querySelector("button").addEventListener("click", () => playVideo(card, v));
   } else {
     card.innerHTML = meta;
   }
   videoGrid.appendChild(card);
 });
+
+// With an odd number of landscape videos in a tab, the first one goes full width
+// so the 2-column rows come out even.
+Object.keys(CATEGORY_LABELS).forEach(cat => {
+  const landscape = videoGrid.querySelectorAll(`.video-card[data-vcat="${cat}"]:not(.video-card--vertical)`);
+  if (landscape.length % 2 === 1 && landscape.length > 1) landscape[0].classList.add("video-card--featured");
+});
+
+/* Video category tabs */
+const videoTabs = document.querySelectorAll(".video-filter");
+function showVideoCategory(cat) {
+  videoTabs.forEach(t => {
+    t.classList.toggle("is-active", t.dataset.vcat === cat);
+    t.setAttribute("aria-selected", String(t.dataset.vcat === cat));
+  });
+  videoGrid.querySelectorAll(".video-card").forEach(c => c.classList.toggle("is-hidden", c.dataset.vcat !== cat));
+  document.querySelectorAll(".video-note").forEach(n => { n.hidden = n.dataset.vcat !== cat; });
+}
+videoTabs.forEach(t => t.addEventListener("click", () => showVideoCategory(t.dataset.vcat)));
+showVideoCategory("long");
 
 /* ---------- Scroll reveal ---------- */
 const revealObserver = new IntersectionObserver(entries => {
@@ -123,15 +222,15 @@ document.querySelectorAll("[data-count]").forEach(el => countObserver.observe(el
 
 /* ---------- Design filters ---------- */
 const works = [...document.querySelectorAll(".work")];
-document.querySelectorAll(".filter").forEach(btn => {
+document.querySelectorAll(".filter[data-filter]").forEach(btn => {
   btn.addEventListener("click", () => {
     const filter = btn.dataset.filter;
-    document.querySelectorAll(".filter").forEach(b => {
+    document.querySelectorAll(".filter[data-filter]").forEach(b => {
       b.classList.toggle("is-active", b === btn);
       b.setAttribute("aria-selected", String(b === btn));
     });
     works.forEach(w => w.classList.toggle("is-hidden", w.dataset.cat !== filter));
-    document.querySelectorAll(".campaign-note").forEach(n => { n.hidden = n.dataset.campaign !== filter; });
+    document.querySelectorAll(".campaign-note[data-campaign]").forEach(n => { n.hidden = n.dataset.campaign !== filter; });
   });
 });
 

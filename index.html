@@ -219,6 +219,25 @@
           from brief to edit to QA to delivery, every day.
         </p>
       </div>
+      <div class="filters reveal" role="tablist" aria-label="Video categories">
+        <button class="filter video-filter is-active" data-vcat="long" role="tab" aria-selected="true">Long form</button>
+        <button class="filter video-filter" data-vcat="short" role="tab" aria-selected="false">Short reels</button>
+        <button class="filter video-filter" data-vcat="ai" role="tab" aria-selected="false">AI-assisted</button>
+      </div>
+
+      <p class="campaign-note video-note" data-vcat="long">
+        <strong>Long form</strong>
+        Explainers, event films and YouTube videos, edited for watch time and pacing over several minutes.
+      </p>
+      <p class="campaign-note video-note" data-vcat="short" hidden>
+        <strong>Short reels</strong>
+        Vertical edits for Reels, Shorts and TikTok, where the first second decides everything.
+      </p>
+      <p class="campaign-note video-note" data-vcat="ai" hidden>
+        <strong>AI-assisted</strong>
+        Videos made with AI image generation, voice synthesis and scripting tools, then edited by hand.
+      </p>
+
       <!-- Filled from the VIDEOS list in js/main.js -->
       <div class="video-grid" id="videoGrid"></div>
     </section>
