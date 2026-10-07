@@ -48,3 +48,9 @@ so it doesn't slow down the page.
 | `js/main.js` | Videos list, animations, gallery and lightbox |
 | `assets/img/` | Optimized images used by the site |
 | `_source/` | Your original files. Kept locally, never uploaded (see `.gitignore`) |
+
+## After changing CSS or JS
+
+Bump the `?v=` number on the `css/style.css` and `js/main.js` links at the top and bottom of
+`index.html` (for example `?v=5` → `?v=6`). That makes browsers download the new files right away
+instead of showing a cached copy for up to 10 minutes.
