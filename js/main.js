@@ -8,7 +8,7 @@
              (Set the playback policy to "public")
 
    category: "long"  = Long form    (16:9 card)
-             "short" = Short reels  (9:16 vertical card)
+             "short" = Short reels  (9:16 vertical card — add vertical: false for a 16:9 one)
              "ai"    = AI-assisted  (16:9 card — add vertical: true for a 9:16 one)
 
    Videos with no youtube or mux ID show as "Coming soon".
@@ -27,8 +27,9 @@ const VIDEOS = [
   { category: "long", title: "Promo for a digital coin", youtube: "Ps25Bw65mVQ", mux: "" },
 
   // Short reels
+  // Shot in 16:9, so it gets the full-width featured spot above the vertical reels.
+  { category: "short", title: "The ~100K-view Reel", youtube: "", mux: "Ll02X00tycVJuypd8q4GDp73smBPKvw3yechlexURXXYg", vertical: false },
   { category: "short", title: "Meta ad — kitchen respray", youtube: "JdVpVBAg85k", mux: "" },
-  { category: "short", title: "The ~100K-view Reel", youtube: "", mux: "" },
   { category: "short", title: "Travel reel", youtube: "", mux: "" },
   { category: "short", title: "Event highlight", youtube: "", mux: "" },
 
@@ -141,7 +142,7 @@ const videoGrid = document.getElementById("videoGrid");
 
 VIDEOS.forEach(v => {
   const hasVideo = Boolean(v.youtube || v.mux);
-  const vertical = v.category === "short" || v.vertical;
+  const vertical = v.vertical ?? (v.category === "short");
   const card = document.createElement("div");
   card.className = "video-card reveal"
     + (vertical ? " video-card--vertical" : "")
@@ -169,14 +170,18 @@ VIDEOS.forEach(v => {
 });
 
 // Layout tweaks per tab:
-// - landscape and vertical videos mixed: landscape stacked on the left, vertical beside them
-// - odd number of landscape videos: the first goes full width so rows come out even
+// - one vertical next to one or two landscape videos: landscape stacked on the left, vertical beside them
+// - otherwise, an odd number of landscape videos: the first goes full width so rows come out even
+//   (this also gives a single landscape video in a tab of vertical reels the featured spot)
 Object.keys(CATEGORY_LABELS).forEach(cat => {
-  const cards = videoGrid.querySelectorAll(`.video-card[data-vcat="${cat}"]`);
-  const landscape = [...cards].filter(c => !c.classList.contains("video-card--vertical"));
-  const mixed = landscape.length > 0 && landscape.length < cards.length;
-  if (mixed) cards.forEach(c => c.classList.add("video-card--mixed"));
-  else if (landscape.length % 2 === 1 && landscape.length > 1) landscape[0].classList.add("video-card--featured");
+  const cards = [...videoGrid.querySelectorAll(`.video-card[data-vcat="${cat}"]`)];
+  const landscape = cards.filter(c => !c.classList.contains("video-card--vertical"));
+  const verticalCount = cards.length - landscape.length;
+  if (verticalCount === 1 && (landscape.length === 1 || landscape.length === 2)) {
+    cards.forEach(c => c.classList.add("video-card--mixed"));
+  } else if (landscape.length % 2 === 1 && (landscape.length > 1 || verticalCount > 0)) {
+    landscape[0].classList.add("video-card--featured");
+  }
 });
 
 /* Video category tabs */
