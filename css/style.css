@@ -308,6 +308,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 }
 .video-card--vertical { grid-column: span 3; aspect-ratio: 9 / 16; }
 .video-card--featured { grid-column: span 12; }
+.video-card--mixed { grid-column: 1 / span 8; }
+.video-card--mixed.video-card--vertical { grid-column: 9 / span 4; grid-row: 1 / span 2; align-self: center; }
 .video-card.is-hidden { display: none; }
 .video-card iframe,
 .video-card mux-player,
@@ -349,7 +351,11 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   font: 500 11px var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--muted); border: 1px solid var(--line); padding: 4px 10px; border-radius: 999px;
 }
-@media (max-width: 900px) { .video-card--vertical { grid-column: span 6; } }
+@media (max-width: 900px) {
+  .video-card--vertical { grid-column: span 6; }
+  .video-card--mixed { grid-column: span 12; }
+  .video-card--mixed.video-card--vertical { grid-column: span 6; grid-row: auto; }
+}
 @media (max-width: 700px) {
   .video-card { grid-column: span 12; }
   .video-card--vertical { grid-column: span 6; }

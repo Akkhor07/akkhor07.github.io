@@ -27,14 +27,15 @@ const VIDEOS = [
   { category: "long", title: "Promo for a digital coin", youtube: "Ps25Bw65mVQ", mux: "" },
 
   // Short reels
+  { category: "short", title: "Meta ad — kitchen respray", youtube: "JdVpVBAg85k", mux: "" },
   { category: "short", title: "The ~100K-view Reel", youtube: "", mux: "" },
   { category: "short", title: "Travel reel", youtube: "", mux: "" },
-  { category: "short", title: "Ad for a US client", youtube: "", mux: "" },
   { category: "short", title: "Event highlight", youtube: "", mux: "" },
 
   // AI-assisted
   { category: "ai", title: "What If — intro video", youtube: "ea_uhSXMBXs", mux: "" },
   { category: "ai", title: "Spirit Guide — channel intro", youtube: "jg009Hiwgzw", mux: "" },
+  { category: "ai", title: "Ad for solar leads", youtube: "p0YQxeuoCDU", mux: "", vertical: true },
 ];
 
 /* ========================================================== */
@@ -167,11 +168,15 @@ VIDEOS.forEach(v => {
   videoGrid.appendChild(card);
 });
 
-// With an odd number of landscape videos in a tab, the first one goes full width
-// so the 2-column rows come out even.
+// Layout tweaks per tab:
+// - landscape and vertical videos mixed: landscape stacked on the left, vertical beside them
+// - odd number of landscape videos: the first goes full width so rows come out even
 Object.keys(CATEGORY_LABELS).forEach(cat => {
-  const landscape = videoGrid.querySelectorAll(`.video-card[data-vcat="${cat}"]:not(.video-card--vertical)`);
-  if (landscape.length % 2 === 1 && landscape.length > 1) landscape[0].classList.add("video-card--featured");
+  const cards = videoGrid.querySelectorAll(`.video-card[data-vcat="${cat}"]`);
+  const landscape = [...cards].filter(c => !c.classList.contains("video-card--vertical"));
+  const mixed = landscape.length > 0 && landscape.length < cards.length;
+  if (mixed) cards.forEach(c => c.classList.add("video-card--mixed"));
+  else if (landscape.length % 2 === 1 && landscape.length > 1) landscape[0].classList.add("video-card--featured");
 });
 
 /* Video category tabs */
