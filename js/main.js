@@ -21,7 +21,7 @@ const SHOWREEL = { youtube: "", mux: "" };
 
 const VIDEOS = [
   // Long form
-  { category: "long", title: "Spirit Guide — channel intro", youtube: "jg009Hiwgzw", mux: "" },
+  { category: "long", title: "Patuakhali tour", youtube: "XBaymnaQIKs", mux: "" },
   // YouTube blocks this one from playing on other sites — see README. Opens on YouTube for now.
   { category: "long", title: "Bandarban tour", youtube: "IQhB25PRd34", mux: "", openOnYouTube: true },
   { category: "long", title: "Promo for a digital coin", youtube: "Ps25Bw65mVQ", mux: "" },
