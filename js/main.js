@@ -10,6 +10,7 @@
    category: "long"  = Long form    (16:9 card)
              "short" = Short reels  (9:16 vertical card — add vertical: false for a 16:9 one)
              "ai"    = AI-assisted  (16:9 card — add vertical: true for a 9:16 one)
+   Any video can be square (1:1) instead: add square: true
 
    Videos with no youtube or mux ID show as "Coming soon".
    If YouTube won't play a video on other sites (embedding off, or a music
@@ -39,6 +40,7 @@ const VIDEOS = [
   { category: "ai", title: "What If — intro video", youtube: "ea_uhSXMBXs", mux: "" },
   { category: "ai", title: "Spirit Guide — channel intro", youtube: "jg009Hiwgzw", mux: "" },
   { category: "ai", title: "Ad for solar leads", youtube: "p0YQxeuoCDU", mux: "", vertical: true },
+  { category: "ai", title: "Motion graphics — Still doomscrolling?", youtube: "", mux: "PGEnT2uVXAD1VWCwgVgQaZV2I3h0262vd00O2PO8HNwjo", square: true },
 ];
 
 /* ========================================================== */
@@ -144,10 +146,10 @@ const videoGrid = document.getElementById("videoGrid");
 
 VIDEOS.forEach(v => {
   const hasVideo = Boolean(v.youtube || v.mux);
-  const vertical = v.vertical ?? (v.category === "short");
+  const shape = v.square ? "square" : (v.vertical ?? (v.category === "short")) ? "vertical" : "landscape";
   const card = document.createElement("div");
   card.className = "video-card reveal"
-    + (vertical ? " video-card--vertical" : "")
+    + (shape !== "landscape" ? ` video-card--${shape}` : "")
     + (hasVideo ? "" : " video-card--soon");
   card.dataset.vcat = v.category;
 
@@ -172,16 +174,27 @@ VIDEOS.forEach(v => {
 });
 
 // Layout tweaks per tab:
-// - one vertical next to one or two landscape videos: landscape stacked on the left, vertical beside them
+// - 1–2 landscape videos mixed with 1–2 vertical/square ones: two columns — landscape stacked
+//   in a wide left column, the vertical/square ones stacked in a narrow right column
 // - otherwise, an odd number of landscape videos: the first goes full width so rows come out even
 //   (this also gives a single landscape video in a tab of vertical reels the featured spot)
+const isLandscape = c => !c.classList.contains("video-card--vertical") && !c.classList.contains("video-card--square");
+
 Object.keys(CATEGORY_LABELS).forEach(cat => {
   const cards = [...videoGrid.querySelectorAll(`.video-card[data-vcat="${cat}"]`)];
-  const landscape = cards.filter(c => !c.classList.contains("video-card--vertical"));
-  const verticalCount = cards.length - landscape.length;
-  if (verticalCount === 1 && (landscape.length === 1 || landscape.length === 2)) {
-    cards.forEach(c => c.classList.add("video-card--mixed"));
-  } else if (landscape.length % 2 === 1 && (landscape.length > 1 || verticalCount > 0)) {
+  const landscape = cards.filter(isLandscape);
+  const narrow = cards.filter(c => !isLandscape(c));
+
+  if (landscape.length >= 1 && landscape.length <= 2 && narrow.length >= 1 && narrow.length <= 2) {
+    const wideCol = document.createElement("div");
+    const narrowCol = document.createElement("div");
+    wideCol.className = "video-col video-col--wide";
+    narrowCol.className = "video-col video-col--narrow";
+    wideCol.dataset.vcat = narrowCol.dataset.vcat = cat;
+    cards[0].before(wideCol, narrowCol);
+    wideCol.append(...landscape);
+    narrowCol.append(...narrow);
+  } else if (landscape.length % 2 === 1 && (landscape.length > 1 || narrow.length > 0)) {
     landscape[0].classList.add("video-card--featured");
   }
 });
@@ -193,7 +206,7 @@ function showVideoCategory(cat) {
     t.classList.toggle("is-active", t.dataset.vcat === cat);
     t.setAttribute("aria-selected", String(t.dataset.vcat === cat));
   });
-  videoGrid.querySelectorAll(".video-card").forEach(c => c.classList.toggle("is-hidden", c.dataset.vcat !== cat));
+  videoGrid.querySelectorAll("[data-vcat]").forEach(c => c.classList.toggle("is-hidden", c.dataset.vcat !== cat));
   document.querySelectorAll(".video-note").forEach(n => { n.hidden = n.dataset.vcat !== cat; });
 }
 videoTabs.forEach(t => t.addEventListener("click", () => showVideoCategory(t.dataset.vcat)));

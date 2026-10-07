@@ -308,8 +308,14 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 }
 .video-card--vertical { grid-column: span 3; aspect-ratio: 9 / 16; }
 .video-card--featured { grid-column: span 12; }
-.video-card--mixed { grid-column: 1 / span 8; }
-.video-card--mixed.video-card--vertical { grid-column: 9 / span 4; grid-row: 1 / span 2; align-self: center; }
+.video-card--square { grid-column: span 4; aspect-ratio: 1 / 1; }
+
+/* Two-column layout for tabs that mix landscape with vertical/square videos (built in main.js) */
+.video-col { display: flex; flex-direction: column; justify-content: center; gap: 20px; }
+.video-col--wide { grid-column: span 8; }
+.video-col--narrow { grid-column: span 4; }
+.video-col .video-card { width: 100%; grid-column: auto; }
+.video-col.is-hidden { display: none; }
 .video-card.is-hidden { display: none; }
 .video-card iframe,
 .video-card mux-player,
@@ -353,8 +359,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 }
 @media (max-width: 900px) {
   .video-card--vertical { grid-column: span 6; }
-  .video-card--mixed { grid-column: span 12; }
-  .video-card--mixed.video-card--vertical { grid-column: span 6; grid-row: auto; }
+  .video-card--square { grid-column: span 6; }
+  .video-col--wide { grid-column: span 12; }
+  .video-col--narrow { grid-column: span 12; display: grid; grid-template-columns: 1fr 1fr; align-items: center; }
 }
 @media (max-width: 700px) {
   .video-card { grid-column: span 12; }
