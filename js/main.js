@@ -30,7 +30,8 @@ const VIDEOS = [
   // Shot in 16:9, so it gets the full-width featured spot above the vertical reels.
   { category: "short", title: "The ~100K-view Reel", youtube: "", mux: "Ll02X00tycVJuypd8q4GDp73smBPKvw3yechlexURXXYg", vertical: false },
   { category: "short", title: "Meta ad — kitchen respray", youtube: "JdVpVBAg85k", mux: "" },
-  { category: "short", title: "Travel reel", youtube: "", mux: "" },
+  { category: "short", title: "Meta ad — roofing", youtube: "aBfgymi7KSE", mux: "" },
+  { category: "short", title: "Ranga × Cox's Bazar tour", youtube: "gewkt4aqIDs", mux: "" },
   { category: "short", title: "Event highlight", youtube: "", mux: "" },
 
   // AI-assisted
