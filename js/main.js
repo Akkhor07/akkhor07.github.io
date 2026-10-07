@@ -25,6 +25,7 @@ const VIDEOS = [
   // YouTube blocks this one from playing on other sites — see README. Opens on YouTube for now.
   { category: "long", title: "Bandarban tour", youtube: "IQhB25PRd34", mux: "", openOnYouTube: true },
   { category: "long", title: "Promo for a digital coin", youtube: "Ps25Bw65mVQ", mux: "" },
+  { category: "long", title: "AMV — Utshorgo", youtube: "OO0mOZMghNY", mux: "" },
 
   // Short reels
   // Shot in 16:9, so it gets the full-width featured spot above the vertical reels.
