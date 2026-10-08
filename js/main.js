@@ -18,7 +18,8 @@
    ========================================================== */
 
 // Your showreel. Fill in one of the two when it's ready.
-const SHOWREEL = { youtube: "", mux: "" };
+// thumbTime (Mux only): which second of the video to use as the background image.
+const SHOWREEL = { youtube: "", mux: "PwvuKQxVaNH9jKKbUhmvFf21eOZkL2I5UySJqgQwMZE", thumbTime: 28 };
 
 const VIDEOS = [
   // Long form
@@ -34,7 +35,7 @@ const VIDEOS = [
   { category: "short", title: "Meta ad — kitchen respray", youtube: "JdVpVBAg85k", mux: "" },
   { category: "short", title: "Meta ad — roofing", youtube: "aBfgymi7KSE", mux: "" },
   { category: "short", title: "Ranga × Cox's Bazar tour", youtube: "gewkt4aqIDs", mux: "" },
-  { category: "short", title: "Event highlight", youtube: "", mux: "" },
+  { category: "short", title: "Motion Graphics", youtube: "", mux: "8UcNZGAmJ58C6KsqvjXtNBtYqNlT00QOsfHxyC3BZphw" },
 
   // AI-assisted
   { category: "ai", title: "What If — intro video", youtube: "ea_uhSXMBXs", mux: "" },
@@ -107,7 +108,7 @@ function muxEmbed(playbackId, title) {
 }
 
 function videoThumb(v) {
-  if (v.mux) return `https://image.mux.com/${v.mux}/thumbnail.webp?width=960&time=2`;
+  if (v.mux) return `https://image.mux.com/${v.mux}/thumbnail.webp?width=1280&time=${v.thumbTime ?? 2}`;
   if (v.youtube) return `https://i.ytimg.com/vi/${v.youtube}/hqdefault.jpg`;
   return "";
 }
@@ -133,6 +134,12 @@ async function playVideo(container, v) {
 const showreelFrame = document.getElementById("showreel-frame");
 const showreelPlay = document.getElementById("showreelPlay");
 if (SHOWREEL.youtube || SHOWREEL.mux) {
+  // First frame of the reel, dimmed, behind the play button
+  const thumb = document.createElement("img");
+  thumb.className = "showreel__thumb";
+  thumb.src = videoThumb(SHOWREEL);
+  thumb.alt = "";
+  showreelFrame.prepend(thumb);
   document.getElementById("showreelStatus").textContent = "· watch now";
   showreelPlay.addEventListener("click", () => playVideo(showreelFrame, { ...SHOWREEL, title: "Showreel" }));
 } else {
