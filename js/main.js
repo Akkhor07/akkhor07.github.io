@@ -40,6 +40,9 @@ const VIDEOS = [
   // AI-assisted
   { category: "ai", title: "What If — intro video", youtube: "ea_uhSXMBXs", mux: "" },
   { category: "ai", title: "Spirit Guide — channel intro", youtube: "jg009Hiwgzw", mux: "" },
+  { category: "ai", title: "Product ad video 1", youtube: "", mux: "mMtVezw01tlrbEGA801WxX3vc02MTnRm9vdTljxUudq8y8", vertical: true },
+  { category: "ai", title: "Product ad video 2", youtube: "", mux: "MwqAjsCzhIBYdbdspCCLa63Y7r00lawlBfbICacBH02LU", vertical: true },
+  { category: "ai", title: "Product ad video 3", youtube: "", mux: "00aBsdqADbXZTsLTcila2r9VPWWa600oJeKri01lQiVp2c", vertical: true },
   { category: "ai", title: "Ad for solar leads", youtube: "p0YQxeuoCDU", mux: "", vertical: true },
   { category: "ai", title: "Motion graphics — Still doomscrolling?", youtube: "", mux: "PGEnT2uVXAD1VWCwgVgQaZV2I3h0262vd00O2PO8HNwjo", square: true },
 ];
@@ -183,6 +186,8 @@ VIDEOS.forEach(v => {
 // Layout tweaks per tab:
 // - 1–2 landscape videos mixed with 1–2 vertical/square ones: two columns — landscape stacked
 //   in a wide left column, the vertical/square ones stacked in a narrow right column
+// - 3+ vertical/square videos of mixed shapes next to landscape ones: the vertical/square ones go in
+//   one strip of equal-height cards (each keeps its own shape) under the landscape videos
 // - otherwise, an odd number of landscape videos: the first goes full width so rows come out even
 //   (this also gives a single landscape video in a tab of vertical reels the featured spot)
 const isLandscape = c => !c.classList.contains("video-card--vertical") && !c.classList.contains("video-card--square");
@@ -201,6 +206,15 @@ Object.keys(CATEGORY_LABELS).forEach(cat => {
     cards[0].before(wideCol, narrowCol);
     wideCol.append(...landscape);
     narrowCol.append(...narrow);
+  } else if (landscape.length > 0 && narrow.length > 2 &&
+             narrow.some(c => c.classList.contains("video-card--square")) &&
+             narrow.some(c => c.classList.contains("video-card--vertical"))) {
+    const strip = document.createElement("div");
+    strip.className = "video-strip";
+    strip.dataset.vcat = cat;
+    narrow[0].before(strip);
+    strip.append(...narrow);
+    if (landscape.length % 2 === 1 && landscape.length > 1) landscape[0].classList.add("video-card--featured");
   } else if (landscape.length % 2 === 1 && (landscape.length > 1 || narrow.length > 0)) {
     landscape[0].classList.add("video-card--featured");
   }

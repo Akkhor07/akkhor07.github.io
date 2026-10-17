@@ -328,6 +328,26 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .video-col--narrow { grid-column: span 4; }
 .video-col .video-card { width: 100%; grid-column: auto; }
 .video-col.is-hidden { display: none; }
+
+/* Equal-height strip for tabs with several vertical/square videos (built in main.js) */
+.video-strip {
+  --strip-h: clamp(220px, 24vw, 316px);
+  grid-column: 1 / -1;
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;
+}
+.video-strip .video-card { flex: none; height: var(--strip-h); width: auto; grid-column: auto; }
+.video-strip.is-hidden { display: none; }
+/* Strip cards are narrow: smaller title and play button; the category label is redundant inside one tab */
+.video-strip .video-card__type { display: none; }
+.video-strip .video-card__meta { padding: 50px 14px 14px; }
+.video-strip .video-card__title { font-size: 20px; line-height: 1.1; }
+.video-strip .video-card__btn i { width: 48px; height: 48px; font-size: 16px; }
+@media (max-width: 700px) {
+  .video-strip { gap: 12px; }
+  .video-strip .video-card__meta { padding: 40px 10px 10px; }
+  .video-strip .video-card__title { font-size: 15px; }
+  .video-strip .video-card__btn i { width: 40px; height: 40px; font-size: 13px; }
+}
 .video-card.is-hidden { display: none; }
 .video-card iframe,
 .video-card mux-player,
