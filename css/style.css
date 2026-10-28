@@ -485,7 +485,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .paper__status { font-family: var(--font-mono); font-size: 13px; color: var(--muted); margin-bottom: 14px; }
 .paper__status--ok { color: #4cc38a; }
 .paper h3 { font-size: clamp(19px, 2vw, 24px); font-weight: 600; line-height: 1.35; margin-bottom: 12px; }
-.paper p:last-child { color: var(--muted); margin: 0; font-size: 15px; }
+.paper > p:not(.paper__status) { color: var(--muted); margin: 0; font-size: 15px; }
+.paper__link { margin-top: 18px; }
 
 .projects { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
 .project { border: 1px solid var(--line); border-radius: 12px; padding: 20px; }

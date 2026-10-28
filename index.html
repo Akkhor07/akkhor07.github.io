@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="css/style.css?v=13">
+  <link rel="stylesheet" href="css/style.css?v=14">
 </head>
 <body>
   <div class="grain" aria-hidden="true"></div>
@@ -378,7 +378,7 @@
         <p class="eyebrow reveal">06 — Research</p>
         <h2 class="section__title reveal">The engineering side.</h2>
         <p class="section__lead reveal">
-          My research is in AI-driven control and digital twins: machine learning that understands the physics of the systems it runs on.
+          My research is in AI-driven control, digital twins and battery health: machine learning that understands the physics of the systems it runs on.
         </p>
       </div>
 
@@ -389,9 +389,25 @@
           <p>To be presented in November 2026. A hybrid GRU–XGBoost model, trained on NASA battery degradation data and deployed hardware-in-the-loop.</p>
         </article>
         <article class="paper reveal">
-          <p class="paper__status"><i class="fa-solid fa-pen-nib"></i> Manuscript in preparation · Journal of Process Control</p>
+          <p class="paper__status"><i class="fa-solid fa-hourglass-half"></i> Under review · Journal of Process Control</p>
           <h3>Physics-Informed Neural Network Surrogates for Model Predictive Control of a Nonisothermal CSTR: A Multi-Seed Evaluation of Nominal Tracking and Robustness</h3>
           <p>Compares physics-informed and black-box neural models inside an MPC loop, using a 7-seed evaluation and Monte Carlo robustness analysis.</p>
+          <a class="link-arrow paper__link" href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7643330" target="_blank" rel="noopener">
+            Read the preprint on SSRN <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          </a>
+        </article>
+        <article class="paper reveal">
+          <p class="paper__status"><i class="fa-solid fa-hourglass-half"></i> Under review · Journal of Energy Storage</p>
+          <h3>Physics-Informed Estimation of Battery Degradation Modes from Partial Discharge Windows: Identifiability, Simulation-Only Training and Validation on Two Chemistries</h3>
+          <p>Estimates battery degradation modes from partial discharge data with a model trained only on simulation, then validated on two cell chemistries.</p>
+          <a class="link-arrow paper__link" href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7624739" target="_blank" rel="noopener">
+            Read the preprint on SSRN <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          </a>
+        </article>
+        <article class="paper reveal">
+          <p class="paper__status"><i class="fa-solid fa-pen-nib"></i> Manuscript in preparation · Journal of Energy Storage</p>
+          <h3>Do Degradation-Mode Estimates Improve Battery Life Forecasts and Check-Up Design? A Test Against Capacity Alone on Three Real-Cell Datasets</h3>
+          <p>Tests whether degradation-mode estimates forecast battery life and plan check-ups better than capacity alone, on three real-cell datasets.</p>
         </article>
       </div>
 
@@ -443,6 +459,6 @@
     <button class="lightbox__nav lightbox__nav--next" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button>
   </div>
 
-  <script src="js/main.js?v=13"></script>
+  <script src="js/main.js?v=14"></script>
 </body>
 </html>
