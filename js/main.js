@@ -28,13 +28,16 @@ const VIDEOS = [
   { category: "long", title: "Bandarban tour", youtube: "IQhB25PRd34", mux: "", openOnYouTube: true },
   { category: "long", title: "Promo for a digital coin", youtube: "Ps25Bw65mVQ", mux: "" },
   { category: "long", title: "AMV — Utshorgo", youtube: "OO0mOZMghNY", mux: "" },
+  { category: "long", title: "How to manage money as a teen", youtube: "5B1XauOMme4", mux: "" },
+  { category: "long", title: "Money management lessons for teens", youtube: "8pR_iNv7ez4", mux: "" },
 
   // Short reels
   // Shot in 16:9, so it gets the full-width featured spot above the vertical reels.
-  { category: "short", title: "The ~100K-view Reel", youtube: "", mux: "Ll02X00tycVJuypd8q4GDp73smBPKvw3yechlexURXXYg", vertical: false },
+  { category: "short", title: "The 230K+ view Reel", youtube: "", mux: "Ll02X00tycVJuypd8q4GDp73smBPKvw3yechlexURXXYg", vertical: false },
   { category: "short", title: "Meta ad — kitchen respray", youtube: "JdVpVBAg85k", mux: "" },
   { category: "short", title: "Meta ad — roofing", youtube: "aBfgymi7KSE", mux: "" },
   { category: "short", title: "Ranga × Cox's Bazar tour", youtube: "gewkt4aqIDs", mux: "" },
+  { category: "short", title: "Teen's finance advice", youtube: "ySEsuDD5nFc", mux: "" },
   { category: "short", title: "Motion Graphics", youtube: "", mux: "8UcNZGAmJ58C6KsqvjXtNBtYqNlT00QOsfHxyC3BZphw" },
 
   // AI-assisted
